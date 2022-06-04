@@ -46,7 +46,7 @@
           // ensure all logic updates happened
           while (frames < FPS) {
             frames++;
-            let changed = update(frames, FPS, delta, seconds, Date.now() - now, time);
+            let changed = update(frames, FPS, delta, seconds, Date.now() - now, time, FPS - frames);
             if(changed){
               hasUpdate = true;
             }
@@ -54,6 +54,9 @@
 
           seconds++;
           frames = 0;
+          for(let i = 0; i < updateList.length; i++){
+            updateList[i].frames = 0;
+          }
           return;
         }
 
@@ -84,7 +87,7 @@
       if(running){
         requestAnimationFrame(runUpdate);
       }else if(typeof stopCB === 'function'){
-        stopCB();
+        stopCB(newNow, seconds);
         stopCB = undefined;
       }
     }
@@ -92,16 +95,22 @@
       requestAnimationFrame(runUpdate);
     }
 
-    function update(frames, fps, delta, seconds, lag, elapsed) {
+    function update(frames, fps, delta, seconds, lag, elapsed, updateCount) {
       const del = [];
       let changed = false;
 
       for (let i = 0; i < updateList.length; i++) {
         if (updateList[i].fps) {
           if (updateList[i].frames < updateList[i].fps) {
+            let d = 60 / updateList[i].fps;
+            let inc = 1;
+            if(updateList[i].merge){
+              d *= updateCount;
+              inc = updateCount;
+            }
             if (frames % Math.round(fps / updateList[i].fps) === 0) {
-              updateList[i].frames++;
-              let stop = updateList[i].cb({ frames: updateList[i].frames, fps: updateList[i].fps, delta: 60 / updateList[i].fps, seconds, lag, elapsed }, { frames, fps, delta, seconds, lag, elapsed });
+              updateList[i].frames += inc;
+              let stop = updateList[i].cb({ frames: updateList[i].frames, fps: updateList[i].fps, delta: d, seconds, lag, elapsed }, { frames, fps, delta, seconds, lag, elapsed });
               if(stop === true){
                 del.push(i);
               }else if(stop !== false){
@@ -110,8 +119,8 @@
             }
             if (frames === fps) {
               while (updateList[i].frames > updateList[i].fps) {
-                updateList[i].frames++;
-                let stop = updateList[i].cb({ frames: updateList[i].frames, fps: updateList[i].fps, delta: 60 / updateList[i].fps, seconds, lag, elapsed }, { frames, fps, delta, seconds, lag, elapsed });
+                updateList[i].frames += inc;
+                let stop = updateList[i].cb({ frames: updateList[i].frames, fps: updateList[i].fps, delta: d, seconds, lag, elapsed }, { frames, fps, delta, seconds, lag, elapsed });
                 if(stop === true){
                   del.push(i);
                 }else if(stop !== false){
@@ -120,8 +129,15 @@
               }
             }
           }
-        } else {
-          let stop = updateList[i].cb({ frames, fps, delta, seconds, lag, elapsed }, { frames, fps, delta, seconds, lag, elapsed });
+        } else if(updateList[i].frames < fps) {
+          let d = delta;
+          let inc = 1;
+          if(updateList[i].merge){
+            d *= updateCount;
+            inc = updateCount;
+          }
+          updateList[i].frames += inc;
+          let stop = updateList[i].cb({ frames: updateList[i].frames, fps, delta: d, seconds, lag, elapsed }, { frames, fps, delta, seconds, lag, elapsed });
           if(stop === true){
             del.push(i);
           }else if(stop !== false){
@@ -153,7 +169,15 @@
     }
 
     return {
-      start: function(){
+      start: function(setStart, setSeconds){
+        setStart = Number(setStart);
+        setSeconds = Number(setSeconds);
+        if(setStart){
+          start = setStart;
+        }
+        if(setSeconds){
+          seconds = setSeconds;
+        }
         running = true;
         requestAnimationFrame(runUpdate);
       },
@@ -161,18 +185,25 @@
         stopCB = cb;
         running = false;
       },
-      update: function (fps, cb) {
-        if (typeof cb !== 'function') {
+      update: function (fps, merge, cb) {
+        if(typeof fps === 'function'){
           [fps, cb] = [cb, fps];
+        }else if(typeof merge === 'function'){
+          [merge, cb] = [cb, merge];
         }
-        if (typeof cb !== 'function') {
+        if(typeof fps === 'boolean'){
+          [fps, merge] = [merge, fps];
+        }
+
+        if(typeof cb !== 'function'){
           return;
         }
+
         fps = Number(fps);
-        if (!fps) {
-          fps = FPS;
-        }
-        updateList.push({ fps, frames: 0, cb });
+        if (!fps) {fps = undefined;}
+        merge = !!merge;
+
+        updateList.push({ fps, frames: 0, cb, merge });
       },
       draw: function (cb) {
         if (typeof cb !== 'function') {
