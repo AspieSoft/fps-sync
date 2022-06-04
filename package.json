@@ -1,10 +1,19 @@
 {
-  "name": "fps-sync",
+  "name": "@aspiesoft/fps-sync",
   "version": "1.0.0",
   "description": "A time based update loop which can synchronize the FPS and frame count of 2 animations.",
   "main": "index.js",
+  "author": "AspieSoft",
+  "license": "MIT",
   "scripts": {
     "test": "nodemon test.js"
+  },
+  "engines": {
+    "node": ">=12.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/aspiesoft/fps-sync.git"
   },
   "keywords": [
     "nodejs",
@@ -16,7 +25,5 @@
     "loop",
     "client",
     "server"
-  ],
-  "author": "AspieSoft",
-  "license": "MIT"
+  ]
 }
