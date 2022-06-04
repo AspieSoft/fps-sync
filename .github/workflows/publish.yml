@@ -12,7 +12,7 @@ jobs:
         with:
           node-version: 12
       - run: npm ci
-      - run: node test.js min
+      - run: node test.js
 
   publish-npm:
     needs: test
