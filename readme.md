@@ -1,7 +1,6 @@
 # FPS Sync
 
 ![npm version](https://img.shields.io/npm/v/fps-sync)
-![dependency status](https://img.shields.io/librariesio/release/npm/fps-sync)
 ![gitHub top language](https://img.shields.io/github/languages/top/aspiesoft/fps-sync)
 ![npm license](https://img.shields.io/npm/l/fps-sync)
 
