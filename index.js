@@ -1,7 +1,7 @@
 ;const fpsSync = (function () {
   if (typeof requestAnimationFrame === 'undefined') {
     var requestAnimationFrame = function (cb) {
-      setImmediate(() => cb(Date.now()));
+      setTimeout(() => cb(Date.now()), 0);
     };
   }
 
