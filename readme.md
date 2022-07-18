@@ -106,7 +106,7 @@ game.update(() => {
 
 // merging lagging updates
 game.update(true, ({delta}) => {
-  // if true is passed as an arg, ti means you are setting merge mode to true
+  // if true is passed as an arg, it means you are setting merge mode to true
   // by default, when updates lag behind, they are all run multiple times without a pause
   // when merge is true, only one update occurs and the delta value is multiplied instead
   value += 1 * delta;
