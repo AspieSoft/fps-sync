@@ -1,6 +1,6 @@
 {
   "name": "@aspiesoft/fps-sync",
-  "version": "1.3.1",
+  "version": "1.3.0",
   "description": "A time based update loop which can synchronize the FPS and frame count of 2 animations.",
   "main": "index.js",
   "author": "AspieSoft",
