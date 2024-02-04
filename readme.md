@@ -20,7 +20,7 @@ npm install fps-sync
 ```
 
 ```html
-<script src="https://cdn.jsdelivr.net/gh/AspieSoft/fps-sync@1.3.0/index.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/AspieSoft/fps-sync@1.3.2/index.js"></script>
 ```
 
 ## Setup
