@@ -183,6 +183,15 @@
         if(setSeconds){
           seconds = setSeconds;
         }
+
+        if(paused){
+          paused = false;
+          return;
+        }
+
+        if(running){
+          return;
+        }
         running = true;
         requestAnimationFrame(runUpdate);
       },
@@ -192,9 +201,6 @@
       },
       pause: function(){
         paused = true;
-      },
-      unpause: function(){
-        paused = false;
       },
       update: function (fps, merge, cb) {
         if(typeof fps === 'function'){
