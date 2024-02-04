@@ -30,10 +30,11 @@
     // the real number of frames that will run within a second
     const rFPS = 1000 / FPS;
 
-    // can be multiplied to a number, to make intervals consistant at different FPS values
+    // can be multiplied to a number, to make intervals consistent at different FPS values
     const delta = 60 / FPS;
 
     let stopCB = undefined;
+    let paused = false;
 
     let last = 0;
     let hasUpdate = false;
@@ -96,6 +97,10 @@
     }
 
     function update(frames, fps, delta, seconds, lag, elapsed, updateCount) {
+      if(paused){
+        return false;
+      }
+
       const del = [];
       let changed = false;
 
@@ -170,6 +175,11 @@
 
     return {
       start: function(setStart, setSeconds){
+        if(paused){
+          paused = false;
+          return;
+        }
+
         setStart = Number(setStart);
         setSeconds = Number(setSeconds);
         if(setStart){
@@ -184,6 +194,9 @@
       stop: function(cb){
         stopCB = cb;
         running = false;
+      },
+      pause: function(){
+        paused = true;
       },
       update: function (fps, merge, cb) {
         if(typeof fps === 'function'){
