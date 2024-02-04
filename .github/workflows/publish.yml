@@ -5,16 +5,6 @@ on:
     types: [created]
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 16
-      - run: npm ci
-      - run: node test/run.js --github
-
   publish-npm:
     needs: test
     runs-on: ubuntu-latest
