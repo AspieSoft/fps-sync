@@ -175,11 +175,6 @@
 
     return {
       start: function(setStart, setSeconds){
-        if(paused){
-          paused = false;
-          return;
-        }
-
         setStart = Number(setStart);
         setSeconds = Number(setSeconds);
         if(setStart){
@@ -197,6 +192,9 @@
       },
       pause: function(){
         paused = true;
+      },
+      unpause: function(){
+        paused = false;
       },
       update: function (fps, merge, cb) {
         if(typeof fps === 'function'){
