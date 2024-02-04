@@ -45,6 +45,13 @@ game.stop(() => {
   console.log('game stopped');
 });
 
+// the pause method will pause the game without stopping the loop, and will not try to resyncronize the time and catch up on updates when resumed
+// notice: this method does Not syncronize updates with other instances, and is here in case anyone wants to use this module for a simple singleplayer instance
+game.pause();
+
+// the unpause method to reverse the effects of game.pause
+game.unpause();
+
 ```
 
 ## Usage
